@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>fwallsh | Workflow</title>
+        <meta charset="utf-8" />
+    </head>
+    <body>
+        <h1>fwallsh | Workflow </h1>
+
+        <hr/>
+
+        <ul>
+            <li><a href="index.html">Index</a></li>
+        </ul>
+
+        <hr/>
+
+        <p>Ce document décrit l'organisation du projet avec <b>Git</b>.</p>
+
+        <p><b>Git</b> est un gestionnaire de version décentralisé organisé en
+        branches.</p>
+
+        <p>La branche <b>master</b> contient les versions finales, prêtes à la
+        mise en production. Chaque <i>commit</i> est taggué du numéro de
+        version.</p>
+
+        <p style="text-align: center;">
+            <img src="images/workflow/master.png"
+                 alt="workflow-master" />
+        </p>
+
+        <p>Une seconde branche existe, dans laquelle se fait l'intégration des
+        nouvelles fonctionnalités et des <i>bugfixes</i>, on la nomme
+        <b>develop</b>.
+
+        <p>Lorsque l'on développe une fonctionnalité, on créé une nouvelle
+        branche respenctant cette convention : <b>feature-nom-feature</b></p>
+
+<pre><code>
+$ git checkout -b feature-ipc develop
+</code></pre>
+
+        <p>Une fois le développement de la fonctionnalité fini, on l'intègre
+        dans la branche <b>develop</b> :</p>
+
+<pre><code>
+$ git checkout develop
+$ git merge --no-ff feature-ipc
+$ git branch -d feature-ipc
+$ git push origin develop
+</code></pre>
+
+        <p>L'option <b>--no-ff</b> permet de forcer la création d'un nouveau
+        <i>commit</i>, et ne fusionne donc pas les historiques des deux
+        branches.</p>
+
+        <p>Lorsque l'on se prépare à sortir une nouvelle version, on créé une
+        nouvelle branche respectant cette convention : <b>release-version</b> :
+        </p>
+
+<pre><code>
+$ git checkout -b release-1.2 develop
+(modification du numéro de version...)
+$ git commit -am "Change version number to 1.2"
+</code></pre>
+
+        <p>Pour intégrer la nouvelle version dans la branche <b>master</b>, on
+        <i>merge</i> la branche <i>release</i> et on tag le <i>commit</i> :</p>
+
+<pre><code>
+$ git checkout master
+$ git merge --no-ff release-1.2
+$ git tag -a 1.2
+</code></pre>
+
+        <p>On intègre enfin dans la branche <b>develop</b> (en résolvant les
+        <i>merge conflict</i> si besoin est), et on supprimme la branche :</p>
+
+<pre><code>
+$ git checkout develop
+$ git merge --no-ff release-1.2
+$ git branch -d release-1.2
+</code></pre>
+
+        <p>Il peut arriver qu'un bogue critique non prévu survienne après la
+        sortie du nouvelle version. Il faut donc réaliser un <i>hotfix</i>.
+        Pour cela on créé une nouvelle branche respectant cette convention :
+        <b>hotfix-version</b></p>
+
+<pre><code>
+$ git checkout -b hotfix-1.2.1 master
+(modification du numéro de version...)
+$ git commit -am "Change version number to 1.2.1"
+(modification afin de régler le bogue...)
+$ git commit -am "Fix segfault in IPC"
+</code></pre>
+
+        <p>On intègre ensuite le <i>hotfix</i> dans la branche <b>master</b>
+        puis dans la branche <b>develop</b> et on supprimme la branche
+        <b>hotfix</b> :</p>
+
+<pre><code>
+$ git checkout master
+$ git merge --no-ff hotfix-1.2.1
+$ git tag -a 1.2.1
+$ git checkout develop
+$ git merge --no-ff hotfix-1.2.1
+$ git branch -d hotfix-1.2.1
+</code></pre>
+
+        <p>Chaque fonctionnalité, bogue, ou autre doit être répertorié sur le
+        <i>bug-tracker</i> de <b>GitHub</b> et assigné à l'un des membres de
+        l'équipe de développement.</p>
+    </body>
+</html>
+
