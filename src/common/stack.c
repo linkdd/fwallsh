@@ -9,7 +9,7 @@ struct stack_t *stack_push (struct stack_t *top, enum type_t type, ...)
           va_list args;
 
           /* allocate the new element */
-          el = allocate (sizeof (struct stack_t));
+          el       = allocate (sizeof (struct stack_t));
           el->prev = top;
 
           el->val.type = type;
@@ -75,6 +75,7 @@ struct stack_t *stack_pop (struct stack_t *top, ...)
           {
                case TYPE_INT:
                     el.i = va_arg (args, int *);
+
                     if (el.i != NULL)
                     {
                          *(el.i) = top->val.data.i;
@@ -220,7 +221,7 @@ struct stack_t *stack_peek (struct stack_t *top, size_t idx, ...)
 size_t stack_length (struct stack_t *top)
 {
      struct stack_t *tmp = NULL;
-     size_t len = 0;
+     size_t len          = 0;
 
      for (tmp = top; tmp != NULL; tmp = tmp->prev)
      {

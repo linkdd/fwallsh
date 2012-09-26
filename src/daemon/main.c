@@ -13,7 +13,7 @@ int main (int argc, char **argv)
 {
      int c = 0;
 
-     char *pidfile = NULL;
+     char *pidfile  = NULL;
      bool daemonize = false;
 
      /* parse command line arguments */
@@ -67,11 +67,11 @@ int main (int argc, char **argv)
                /* register pidfile */
 
                pid_t pid = getpid ();
-               FILE *f = fopen (pidfile, "w");
+               FILE *f   = fopen (pidfile, "w");
 
                if (f != NULL)
                {
-                    fprintf ("%d", pid);
+                    fprintf (f, "%d", pid);
                     fclose (f);
                }
 

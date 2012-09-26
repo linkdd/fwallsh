@@ -1,4 +1,4 @@
-bin_PROGRAMS = fwallshd
+sbin_PROGRAMS = fwallshd
 
 fwallshd_SOURCES = main.c local.h daemon.c daemon.h module.c module.h
 fwallshd_CFLAGS = -I$(srcdir)/../fwallsh
