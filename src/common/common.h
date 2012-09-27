@@ -1,6 +1,8 @@
 #ifndef __COMMON_H
 #define __COMMON_H
 
+#include <fwallsh-config.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>

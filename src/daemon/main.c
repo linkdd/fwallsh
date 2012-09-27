@@ -22,11 +22,11 @@ int main (int argc, char **argv)
           switch (c)
           {
                case 'h':
-                    fprintf (stderr, "Usage: %s [-h] [-v] [-p pidfile] [-d]\n", argv[0]);
+                    fprintf (stderr, "Usage: %s [-h] [-v] [-p pidfile] [-d]\n", PACKAGE);
                     break;
 
                case 'v':
-                    fprintf (stderr, "fwallsh v0.1\n");
+                    fprintf (stderr, "%s, by :\n", PACKAGE_STRING);
                     break;
 
                case 'p':
@@ -38,7 +38,7 @@ int main (int argc, char **argv)
                     break;
 
                case '?':
-                    fprintf (stderr, "Usage: %s [-h] [-v] [-p pidfile] [-d]\n", argv[0]);
+                    fprintf (stderr, "Usage: %s [-h] [-v] [-p pidfile] [-d]\n", PACKAGE);
                     exit (EXIT_FAILURE);
           }
      }
@@ -50,7 +50,7 @@ int main (int argc, char **argv)
           /* if the pidfile is NULL, set a default value */
           if (pidfile == NULL)
           {
-               pidfile = string_duplicate ("/var/run/fwallsh.pid");
+               pidfile = string_duplicate ("/var/run/%s.pid", PACKAGE);
           }
 
           /* daemonize the process */
