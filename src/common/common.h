@@ -10,7 +10,9 @@
 
 #include <fwallsh/common/types.h>
 #include <fwallsh/common/allocate.h>
+#include <fwallsh/common/error.h>
 #include <fwallsh/common/string-util.h>
 #include <fwallsh/common/stack.h>
+#include <fwallsh/common/hash.h>
 
 #endif /* __COMMON_H */

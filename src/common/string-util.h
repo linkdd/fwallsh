@@ -59,7 +59,18 @@ char *string_concatenate (char const * const str0, char const * const str1);
 bool string_equal (char const * const str0, char const * const str1);
 
 /*!
- * Split a string into an array of string.
+ * Split a string according to a delimiter string.
+ * This functions handle empty tokens.
+ *
+ * \param str String to split.
+ * \param delim List of delimiter to use for the split.
+ * \return NULL terminated array of strings.
+ */
+
+char **string_split (char const * const str, char const * const delim);
+
+/*!
+ * Split a string into an array of strings.
  * This function manage shell quotting.
  *
  * \param str String to parse.
@@ -68,5 +79,12 @@ bool string_equal (char const * const str0, char const * const str1);
  */
 
 char **string_parse_shell_argv (char const * const str, int *argc);
+
+/*!
+ * Free a NULL terminated array of strings.
+ *
+ * \param strv Array of strings.
+ */
+void string_freev (char **strv);
 
 #endif /* __STRING_H */

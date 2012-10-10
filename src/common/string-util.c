@@ -87,6 +87,58 @@ bool string_equal (char const * const str0, char const * const str1)
      return (strcmp (str0, str1) == 0);
 }
 
+char **string_split (char const * const str, char const * const delim)
+{
+     char **ret = allocate (sizeof (char *));
+     int last   = 1;
+
+     int i  = 0;
+     int oi = 0;
+
+     char const *tmp = str;
+
+     /* for each character in str */
+     for (i = 0; i < strlen (str); ++i)
+     {
+          int j = 0;
+
+          /* check if it's equal to one character fro; delim */
+          for (j = 0; j < strlen (delim); ++j)
+          {
+               /* if it's equal */
+               if (str[i] == delim[i])
+               {
+                    /* allocate a new entry in the table */
+                    last++;
+
+                    ret = reallocate (ret, sizeof (char *) * last);
+
+                    /* copy the string */
+                    ret[last - 2] = string_duplicate_n (i - oi, tmp);
+                    /* set last entry as NULL delimiter */
+                    ret[last - 1] = NULL;
+
+                    /* tmp points to the next token */
+                    oi = i + 1;
+                    tmp = (str + oi);
+
+                    break;
+               }
+          }
+     }
+
+     /* now, add the last token */
+
+     last++;
+
+     ret = reallocate (ret, sizeof (char *) * last);
+
+     ret[last - 2] = string_duplicate_n (i - oi, tmp);
+     ret[last - 1] = NULL;
+
+     return ret;
+}
+
 char **string_parse_shell_argv (char const * const str, int *argc)
 {
      char **argv = NULL;
@@ -153,4 +205,25 @@ char **string_parse_shell_argv (char const * const str, int *argc)
      }
 
      return argv;
+}
+
+size_t string_lengthv (char **strv)
+{
+     int ret = 0;
+
+     for (ret = 0; strv[ret] != NULL; ++ret);
+
+     return ret;
+}
+
+void string_freev (char **strv)
+{
+     int i = 0;
+
+     for (i = 0; strv[i] != NULL; ++i)
+     {
+          deallocate (strv[i]);
+     }
+
+     deallocate (strv);
 }
