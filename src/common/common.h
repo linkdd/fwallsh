@@ -14,5 +14,6 @@
 #include <fwallsh/common/string-util.h>
 #include <fwallsh/common/stack.h>
 #include <fwallsh/common/hash.h>
+#include <fwallsh/common/config.h>
 
 #endif /* __COMMON_H */

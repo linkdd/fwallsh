@@ -32,7 +32,7 @@ struct hashtable_t
  * \param ... Value.
  * \return HashTable's head.
  */
-struct hashtable_t *hastable_update (struct hashtable_t *hashv, void * const key, size_t size, enum type_t type, ...);
+struct hashtable_t *hashtable_update (struct hashtable_t *hashv, void * const key, size_t size, enum type_t type, ...);
 
 /*!
  * Get value associated to a key.
@@ -42,7 +42,7 @@ struct hashtable_t *hastable_update (struct hashtable_t *hashv, void * const key
  * \param key Key associated to the value.
  * \param size Size of key.
  * \param ... Pointer to storage location for the value.
- * \return HashTable's head or NULL if hashv is NULL.
+ * \return HashTable's head or NULL if hashv is NULL or if the key wasn't found.
  */
 struct hashtable_t *hashtable_get (struct hashtable_t *hashv, void * const key, size_t size, ...);
 

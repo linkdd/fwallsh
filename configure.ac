@@ -1,5 +1,7 @@
 AC_INIT([fwallsh], [0.1], [david.jose.delassus@gmail.com])
-AM_INIT_AUTOMAKE([foreign -Wall -Werror])
+AM_INIT_AUTOMAKE([foreign -Wall])
+
+CFLAGS+="-Wall -Werror"
 
 AC_PROG_CC
 AM_PROG_CC_C_O

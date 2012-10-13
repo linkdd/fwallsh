@@ -1,5 +1,12 @@
 #include <fwallsh/common/common.h>
 
+/*!
+ * Professor Daniel J. Bernstein hashing algorithm.
+ *
+ * \param data Data to hash.
+ * \param size Size of the data to hash.
+ * \return Hashed data.
+ */
 static size_t _hash (void * const data, size_t size)
 {
      char const * const ptr = data;
@@ -116,13 +123,13 @@ struct hashtable_t *hashtable_get (struct hashtable_t *hashv, void * const key, 
                value_get ((struct value_t *) tmp, args);
                va_end (args);
 
-               break;
+               return hashv->head;
           }
 
           tmp = tmp->next;
      } while (tmp != hashv->head);
 
-     return hashv->head;
+     return NULL;
 }
 
 struct hashtable_t *hashtable_remove (struct hashtable_t *hashv, void * const key, size_t size)

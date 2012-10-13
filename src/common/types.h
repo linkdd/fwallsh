@@ -109,6 +109,9 @@ static inline void value_get (struct value_t *val, va_list arg)
                }
 
                break;
+
+          default:
+               break;
      }
 }
 
@@ -145,6 +148,9 @@ static inline void value_set (struct value_t *val, enum type_t type, va_list arg
 
           case TYPE_POINTER:
                val->data.p = va_arg (arg, void *);
+               break;
+
+          default:
                break;
      }
 }

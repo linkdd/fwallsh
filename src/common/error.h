@@ -10,6 +10,15 @@ struct error_t
 };
 
 /*!
+ * Define error.
+ *
+ * \param error Pointer to the error to set.
+ * \param format Format string (see string_duplicate()).
+ * \param ... Arguments for the format string.
+ */
+void error_set (struct error_t *error, char const * const format, ...);
+
+/*!
  * Free memory used by an error type.
  *
  * \param error Pointer to the error to free.
