@@ -7,6 +7,8 @@ AC_PROG_CC
 AM_PROG_CC_C_O
 AC_PROG_RANLIB
 
+PKG_CHECK_MODULES(sqlite3, [sqlite3])
+
 AC_CONFIG_HEADERS([fwallsh-config.h])
 AC_CHECK_HEADER([stdio.h])
 AC_CHECK_HEADER([stdlib.h])
