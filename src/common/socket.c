@@ -94,3 +94,74 @@ void socket_init (struct socket_t *s)
           s->read     = _socket_read;
      }
 }
+
+int socket_select (int fdmax,
+                   struct socket_set_t *readset,
+                   struct socket_set_t *writeset,
+                   struct socket_set_t *exceptset,
+                   struct timeval *timeout)
+{
+     fd_set *readfds   = (readset != NULL ? &(readset->set) : NULL);
+     fd_set *writefds  = (writeset != NULL ? &(writeset->set) : NULL);
+     fd_set *exceptfds = (exceptset != NULL ? &(exceptset->set) : NULL);
+
+     return select (fdmax, readfds, writefds, exceptfds, timeout);
+}
+
+void socket_set_zero (struct socket_set_t *sset)
+{
+     int i = 0;
+
+     for (i = 0; i < FD_SETSIZE; ++i)
+     {
+          sset->s[i] = NULL;
+     }
+
+     FD_ZERO (&(sset->set));
+
+     sset->fdmax = 0;
+}
+
+void socket_set_add (struct socket_set_t *sset, struct socket_t *s)
+{
+     if (s != NULL)
+     {
+          sset->s[s->fd] = s;
+          FD_SET (s->fd, &(sset->set));
+     }
+}
+
+void socket_set_remove (struct socket_set_t *sset, struct socket_t *s)
+{
+     if (s != NULL)
+     {
+          sset->s[s->fd] = NULL;
+          FD_CLR (s->fd, &(sset->set));
+     }
+}
+
+bool socket_set_isset (struct socket_set_t *sset, struct socket_t *s)
+{
+     if (s == NULL)
+     {
+          return false;
+     }
+
+     return FD_ISSET (s->fd, &(sset->set));
+}
+
+void socket_set_foreach (struct socket_set_t *sset, socket_set_foreach_fn caller, void *data)
+{
+     if (caller != NULL)
+     {
+          int i = 0;
+
+          for (i = 0; i < FD_SETSIZE; ++i)
+          {
+               if (sset->s[i] != NULL)
+               {
+                    caller (sset, sset->s[i], data);
+               }
+          }
+     }
+}
