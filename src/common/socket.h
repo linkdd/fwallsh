@@ -122,6 +122,27 @@ struct socket_t
 };
 
 /*!
+ * \brief Wrapper to fd_set structure.
+ *
+ * Allow to manage multiple socket I/O operation.
+ */
+struct socket_set_t
+{
+     struct socket_t *s[FD_SETSIZE];    /*!< Array of socket_t structures. */
+     fd_set set;                        /*!< fd_set structure. */
+};
+
+/*!
+ * \fn void socket_set_foreach_fn (struct socket_set_t *sset, struct socket_t *s, void *data)
+ * \brief Called by socket_set_foreach().
+ *
+ * \param sset A socket_set_t structure.
+ * \param s The current socket_t structure in the set.
+ * \param data Data passed via socket_set_foreach().
+ */
+typedef void (*socket_set_foreach_fn) (struct socket_set_t *, struct socket_t *, void *);
+
+/*!
  * \brief Initialize a socket structure.
  *
  * Defines the function pointers in the socket structure with
@@ -130,5 +151,72 @@ struct socket_t
  * \param s A socket structure.
  */
 void socket_init (struct socket_t *s);
+
+/*!
+ * \brief Allow monitoring multiple sockets.
+ *
+ * This function calls select().
+ *
+ * \param fdmax Highest-numbered file descriptor in any of the three sets, plus 1.
+ * \param readset Will be watched to see if bytes are available for reading on one or more sockets.
+ * \param writeset Will be watched to see if one or more sockets are ready to write.
+ * \param exceptset Will be watched for exceptions.
+ * \param timeout Specifies the minimum interval that select() should block for a file descriptor to become ready.
+ * \return Number of file descriptors contained in the three returned descriptor sets which may be zero if the timeout expires, or -1 on error with errno set.
+ */
+int socket_select (int fdmax,
+                   struct socket_set_t *readset,
+                   struct socket_set_t *writeset,
+                   struct socket_set_t *exceptset,
+                   struct timeval *timeout);
+
+/*!
+ * \brief Clears the socket set.
+ *
+ * This function calls FD_ZERO().
+ *
+ * \param sset A socket_set_t structure.
+ */
+void socket_set_zero (struct socket_set_t *sset);
+
+/*!
+ * \brief Add a socket to the set.
+ *
+ * This function calls FD_SET().
+ *
+ * \param sset A socket_set_t structure.
+ * \param s The socket_t structure to add.
+ */
+void socket_set_add (struct socket_set_t *sset, struct socket_t *s);
+
+/*!
+ * \brief Remove a socket from the set.
+ *
+ * This function calls FD_CLR().
+ *
+ * \param sset A socket_set_t structure.
+ * \param s The socket_t structure to remove.
+ */
+void socket_set_remove (struct socket_set_t *sset, struct socket_t *s);
+
+/*!
+ * \brief Check if there was I/O operations on a socket.
+ *
+ * This function calls FD_ISSET().
+ *
+ * \param sset A socket_set_t structure.
+ * \param s A socket_t structure.
+ * \return true if there was I/O operations, false otherwise.
+ */
+bool socket_set_isset (struct socket_set_t *sset, struct socket_t *s);
+
+/*!
+ * \brief Loop on each socket in the set.
+ *
+ * \param sset A socket_set_t structure.
+ * \param caller Function to call for each socket (see socket_set_foreach_fn).
+ * \param data Data to pass to the caller.
+ */
+void socket_set_foreach (struct socket_set_t *sset, socket_set_foreach_fn caller, void *data);
 
 #endif /* __SOCKET_H */
