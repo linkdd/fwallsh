@@ -59,6 +59,7 @@ void handle_client_socket (struct socket_set_t *sset, struct socket_t *s, void *
      else if (n == 0)
      {
           socket_set_remove (&global.master, s);
+          deallocate (s);
           return;
      }
 

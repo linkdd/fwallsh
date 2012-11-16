@@ -30,6 +30,8 @@ static int _main_loop (void)
           socket_set_foreach (&readset, handle_socket, NULL);
      }
 
+     deallocate (global.listener);
+
      return EXIT_SUCCESS;
 }
 
