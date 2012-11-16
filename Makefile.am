@@ -1,1 +1,1 @@
-SUBDIRS = src/common src/daemon
+SUBDIRS = src/common src/daemon src/shell

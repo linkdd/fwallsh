@@ -27,6 +27,7 @@ AC_CONFIG_FILES([
           Makefile
           src/common/Makefile
           src/daemon/Makefile
+          src/shell/Makefile
 ])
 
 AC_OUTPUT
