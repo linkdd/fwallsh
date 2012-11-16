@@ -1,16 +1,41 @@
 #include <fwallsh/daemon/local.h>
 
-static void _main_loop (void)
-{
-     bool quit = false;
+struct global_t global;
 
-     while (!quit)
+/*! main loop of the program. */
+static int _main_loop (void)
+{
+     struct socket_set_t readset;
+
+     if (!initialize_socket ())
      {
+          return EXIT_FAILURE;
      }
+
+     socket_set_zero (&readset);
+
+     /* wait for clients */
+     while (true)
+     {
+          readset = global.master;
+
+          /* monitor many sockets */
+          if (socket_select (global.fdmax + 1, &readset, NULL, NULL, NULL) < 0)
+          {
+               syslog (LOG_ERR, "socket select: %s", strerror (errno));
+               continue;
+          }
+
+          /* loop on each socket to check which one is set */
+          socket_set_foreach (&readset, handle_socket, NULL);
+     }
+
+     return EXIT_SUCCESS;
 }
 
 int main (int argc, char **argv)
 {
+     int retcode = EXIT_SUCCESS;
      int c = 0;
 
      char *pidfile  = NULL;
@@ -77,7 +102,7 @@ int main (int argc, char **argv)
 
                /* run main loop */
 
-               _main_loop ();
+               retcode = _main_loop ();
 
                /* remove pidfile */
 
@@ -93,10 +118,14 @@ int main (int argc, char **argv)
                deallocate (pidfile);
           }
 
+          /* Open log */
+
+          openlog ("fwallsh:", LOG_CONS | LOG_PID, LOG_DAEMON);
+
           /* run main loop */
 
-          _main_loop ();
+          retcode = _main_loop ();
      }
 
-     return EXIT_SUCCESS;
+     return retcode;
 }

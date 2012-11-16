@@ -73,6 +73,9 @@ void main_loop (struct socket_t *s)
                perror ("fwallsh: main[socket-write]");
           }
 
+          /* free command */
+          free (line);
+
           /* receive answer */
           if (n > 0 && (n = s->read (s, buffer, BUFSIZ, 0)) < 0)
           {
@@ -83,7 +86,12 @@ void main_loop (struct socket_t *s)
           if (n > 0)
           {
                buffer[n] = 0;
-               printf ("%s", buffer);
+               printf ("%s\n", buffer);
+
+               if (!strcmp (buffer, "exit"))
+               {
+                    done = true;
+               }
           }
      }
 

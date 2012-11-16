@@ -36,27 +36,11 @@ static bool _socket_listen (struct socket_t *s, int backlog)
 }
 
 /*! Internal function for socket_t::accept(). */
-static struct socket_t *_socket_accept (struct socket_t *s)
+static bool _socket_accept (struct socket_t *s, struct socket_t *peer)
 {
-     struct socket_t *peer = malloc (sizeof (struct socket_t));
-
-     if (!peer)
-     {
-          errno = ENOMEM;
-          return NULL;
-     }
-
      peer->fd = accept (s->fd, (struct sockaddr *) &(s->addr), &(s->addrlen));
 
-     if (peer->fd == -1)
-     {
-          free (peer);
-          return NULL;
-     }
-
-     socket_init (peer);
-
-     return peer;
+     return (peer->fd >= 0);
 }
 
 /*! Internal function for socket_t::connect(). */
@@ -118,8 +102,6 @@ void socket_set_zero (struct socket_set_t *sset)
      }
 
      FD_ZERO (&(sset->set));
-
-     sset->fdmax = 0;
 }
 
 void socket_set_add (struct socket_set_t *sset, struct socket_t *s)

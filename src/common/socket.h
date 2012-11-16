@@ -69,16 +69,17 @@ struct socket_t
      bool (*listen) (struct socket_t *, int);
 
      /*!
-      * \fn struct socket_t * socket_t::accept (struct socket_t *s)
+      * \fn bool socket_t::accept (struct socket_t *s, struct socket_t *peer)
       * \brief Accept an incomming connection.
       *
       * This function calls accept() and should be called
       * only by the daemon.
       *
       * \param s A socket structure.
-      * \return the client socket structure on success, NULL on error and errno is set.
+      * \param peer The client socket structure.
+      * \return true on success, false on error and errno is set.
       */
-     struct socket_t * (*accept) (struct socket_t *);
+     bool (*accept) (struct socket_t *, struct socket_t *);
 
      /*!
       * \fn bool socket_t::connect (struct socket_t *s)
