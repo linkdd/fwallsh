@@ -53,7 +53,7 @@ void handle_client_socket (struct socket_set_t *sset, struct socket_t *s, void *
 
      if ((n = s->read (s, buffer, BUFSIZ, 0)) < 0)
      {
-          syslog (LOG_ERR, "s->read(): %s", strerror (errno));
+          ssl_print_errors ("s->read()");
           return;
      }
      else if (n == 0)
@@ -67,7 +67,7 @@ void handle_client_socket (struct socket_set_t *sset, struct socket_t *s, void *
 
      if ((n = s->write (s, buffer, strlen (buffer), 0)) < 0)
      {
-          syslog (LOG_ERR, "s->write(): %s", strerror (errno));
+          ssl_print_errors ("s->write()");
      }
 }
 
@@ -79,16 +79,35 @@ void handle_socket (struct socket_set_t *sset, struct socket_t *s, void *user_da
           /* if the selected socket is the listener */
           if (s == global.listener)
           {
-               struct socket_t *cs = allocate (sizeof (struct socket_t));
+               struct socket_ssl_t *cssl = allocate (sizeof (struct socket_ssl_t));
+               struct socket_t *cs = (struct socket_t *) cssl;
 
                /* initialize client socket */
-               socket_init (cs);
+               socket_ssl_init (cssl);
 
                /* accept the incoming connection */
                if (!s->accept (s, cs))
                {
                     syslog (LOG_ERR, "s->accept(): %s", strerror (errno));
-                    deallocate (cs);
+                    deallocate (cssl);
+                    return;
+               }
+
+               /* initialize SSL part of the socket */
+               if (!cssl->new (cssl, global.ssl.ctx))
+               {
+                    ssl_print_errors ("cssl->new()");
+                    cs->shutdown (cs);
+                    deallocate (cssl);
+                    return;
+               }
+
+               /* perform handshake */
+               if (!cssl->handshake (cssl))
+               {
+                    ssl_print_errors ("cssl->handshake()");
+                    cs->shutdown (cs);
+                    deallocate (cssl);
                     return;
                }
 

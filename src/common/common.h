@@ -17,5 +17,6 @@
 #include <fwallsh/common/hash.h>
 #include <fwallsh/common/config.h>
 #include <fwallsh/common/socket.h>
+#include <fwallsh/common/ssl.h>
 
 #endif /* __COMMON_H */

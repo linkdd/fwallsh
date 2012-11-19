@@ -7,6 +7,11 @@ static int _main_loop (void)
 {
      struct socket_set_t readset;
 
+     if (!initialize_ssl ())
+     {
+          return EXIT_FAILURE;
+     }
+
      if (!initialize_socket ())
      {
           return EXIT_FAILURE;
@@ -31,6 +36,8 @@ static int _main_loop (void)
      }
 
      deallocate (global.listener);
+
+     SSL_CTX_free (global.ssl.ctx);
 
      return EXIT_SUCCESS;
 }

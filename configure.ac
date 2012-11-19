@@ -23,6 +23,9 @@ AC_CHECK_HEADER([err.h])
 AC_CHECK_HEADER([dlfcn.h])
 AC_CHECK_HEADER([syslog.h])
 
+AC_CHECK_LIB([dl], [dlopen])
+AC_CHECK_LIB([ssl], [SSL_library_init])
+
 AC_CONFIG_FILES([
           Makefile
           src/common/Makefile
@@ -31,3 +34,4 @@ AC_CONFIG_FILES([
 ])
 
 AC_OUTPUT
+
