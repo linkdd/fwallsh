@@ -8,6 +8,7 @@ AM_PROG_CC_C_O
 AC_PROG_RANLIB
 
 PKG_CHECK_MODULES(sqlite3, [sqlite3])
+PKG_CHECK_MODULES(OpenSSL, [openssl])
 
 LIBS_OLD=$LIBS
 
