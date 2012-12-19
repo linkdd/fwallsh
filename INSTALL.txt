@@ -1,0 +1,29 @@
+## PREREQUISITES
+
+To build fwallsh, you need :
+
+ * autotools
+ * automake
+ * make
+
+## BUILDING FWALLSH
+
+Run the following commands in the archive directory :
+
+     $ ./bootstrap.sh
+     $ ./configure --prefix=/usr
+     $ make
+
+## INSTALLING FWALLSH
+
+Run the following command in the archive directory :
+
+     # make install
+
+NB: It handles DESTDIR, in order to install it into a fake root directory.
+
+## UNINSTALLING FWALLSH
+
+Run the following command in the archive directory :
+
+     # make uninstall
